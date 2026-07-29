@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PZ3 General Affairs Feedback/Complaint</title>
+<link rel="stylesheet" href="style.css">
+
+<!--
+  =========================================================
+  SETUP INSTRUCTIONS (Microsoft Power Automate - free with M365)
+  =========================================================
+  1. Go to https://make.powerautomate.com -> Create -> Automated cloud flow
+  2. Trigger: search "When an HTTP request is received" -> select it
+  3. Click the trigger -> "Use sample payload to generate schema" -> paste:
+       {
+         "location": "Level 3 Pantry",
+         "category": "Pest Control",
+         "description": "Ants near the sink",
+         "photo": "base64stringhere"
+       }
+  4. Add step -> "Send an email (V2)" (Office 365 Outlook connector)
+       To: mohamad-azril.abas.yb@renesas.com
+       Subject: New PZ3 Complaint - (insert dynamic "location" field)
+       Body: insert dynamic "category" and "description" fields
+       Attachment Name: complaint-photo.jpg
+       Attachment Content: insert dynamic "photo" field
+  5. Add ANOTHER step after the email step -> search "Response" -> select it
+       Status Code: 200
+       Body: { "status": "success" }
+     (This step is what lets the form actually confirm the email step
+     finished, instead of just confirming the HTTP request arrived.)
+  6. Save the flow, reopen the HTTP trigger step, copy the generated
+     HTTP POST URL, and paste it into script.js as POWER_AUTOMATE_URL.
+
+  NOTE ON PHOTOS: the photo is resized/compressed client-side before
+  sending to keep the request reasonably small over mobile networks.
+  =========================================================
+-->
+</head>
+<body>
+<div class="container">
+    <div class="lang-switch">
+        <button type="button" id="btn-en" class="active" onclick="setLang('en')">English</button>
+        <button type="button" id="btn-ms" onclick="setLang('ms')">Bahasa Melayu</button>
+    </div>
+
+    <h2 data-i18n="title">PZ3 General Affairs Feedback/Complaint</h2>
+    <p class="subtitle" data-i18n="subtitle">Housekeeping Complaint Form</p>
+
+    <form id="complaintForm">
+        <label data-i18n="location">Location / Area <span class="required">*</span></label>
+        <input type="text" id="location" required>
+
+        <label data-i18n="category">Complaint Category <span class="required">*</span></label>
+        <select id="category" required>
+            <option value="" data-i18n="cat_select">-- Select Category --</option>
+            <option value="Cleanliness Issues" data-i18n="cat_1">Cleanliness Issues</option>
+            <option value="Toilet & Washroom Complaints" data-i18n="cat_2">Toilet &amp; Washroom Complaints</option>
+            <option value="Waste Management" data-i18n="cat_3">Waste Management</option>
+            <option value="Pantry & Cafeteria Areas" data-i18n="cat_4">Pantry &amp; Cafeteria Areas</option>
+            <option value="Pest Control" data-i18n="cat_5">Pest Control</option>
+            <option value="Safety Housekeeping" data-i18n="cat_6">Safety Housekeeping</option>
+            <option value="Contractor Performance" data-i18n="cat_7">Contractor Performance</option>
+            <option value="Environmental Issues" data-i18n="cat_8">Environmental Issues</option>
+            <option value="Office Area Complaints" data-i18n="cat_9">Office Area Complaints</option>
+            <option value="Landscape & External Areas" data-i18n="cat_10">Landscape &amp; External Areas</option>
+        </select>
+
+        <label data-i18n="description">Complaint Description <span class="required">*</span></label>
+        <textarea id="description" rows="5" required></textarea>
+
+        <label data-i18n="photo">Photo Evidence <span class="required">*</span></label>
+        <input type="file"
+               id="photo"
+               accept="image/*"
+               capture="environment"
+               required>
+        <div class="preview">
+            <img id="imagePreview">
+            <div id="photoSizeInfo" class="photo-size-info"></div>
+        </div>
+
+        <button type="submit" id="submitBtn" data-i18n="submit">Submit Complaint</button>
+        <div class="status-msg" id="statusMsg"></div>
+    </form>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
